@@ -25,7 +25,7 @@ def on_real_time():
 	for row in res: print row
 
 def on_db():
-	os.system('sqlite3 ../photox.db < photox.sql')
+	os.system('sqlite3 ../photox.db < schema.sql')
 
 if __name__ == '__main__':
 	print '* Subscribing to real-time updates...'

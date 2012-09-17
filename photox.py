@@ -55,7 +55,7 @@ def done():
 
 		res = fb_query('me', acc_tok)
 		db_query('DELETE FROM users WHERE id=?', (res[u'id'],))
-		db_query('INSERT INTO users(id, acc_tok, name) VALUES(?, ?, ?)', (res[u'id'], acc_tok, res[u'name']))
+		db_query('INSERT INTO users(id, acc_tok, name, url) VALUES(?, ?, ?, ?)', (res[u'id'], acc_tok, res[u'name'], res[u'link']))
 		g.db.commit()
 
 #		res = fb_query('me/albums', acc_tok, True)
@@ -92,14 +92,28 @@ def cb():
 						break
 
 				if tag_id != -1:
-					db_query('INSERT INTO imgs(id, img, thumb, text, ctime, url, tag, is_right) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
-						(row[u'id'], row[u'source'], row[u'picture'], row[u'name'], row[u'created_time'], row[u'link'], tag_id, False))
+					db_query('INSERT INTO imgs(id, img, thumb, text, ctime, url, user, tag, is_right) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+						(row[u'id'], row[u'source'], row[u'picture'], row[u'name'], row[u'created_time'], row[u'link'], row[u'from'][u'id'], tag_id, False))
 					g.db.commit()
 
 				db_query('INSERT INTO img_visits(id) VALUES(?)', (row[u'id'],))
 				g.db.commit()
 
 	return '!!'
+
+@app.route('/admin/')
+def admin():
+	return render_template('admin.html')
+
+@app.route('/tags/')
+def tags():
+	tags = db_query('SELECT * FROM tags')
+	return render_template('tags.html', tags=tags)
+
+@app.route('/imgs/')
+def imgs():
+	imgs = db_query('SELECT *, users.name AS user_name, tags.name AS tag_name, users.url AS user_url, imgs.url AS img_url FROM imgs JOIN users ON imgs.user = users.id JOIN tags ON imgs.tag = tags.id')
+	return render_template('imgs.html', imgs=imgs)
 
 if __name__ == '__main__':
 	app.run(host='', port=1234, debug=True)

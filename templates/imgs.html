@@ -1,0 +1,23 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}" type="text/css" />
+<h2>그림 관리</h2>
+<table>
+	<tr>
+		<th>그림</th>
+		<th>태그</td>
+		<th>작성 시각</th>
+		<th>사용자</th>
+		<th>출처</td>
+		<th>확인</td>
+	</tr>
+	{% for img in imgs %}
+	<tr>
+		<td><a href="{{ img.img }}" target="_blank"><img src="{{ img.thumb }}" alt="" /></a></td>
+		<td>{{ img.tag_name }}</td>
+		<td>{{ img.ctime }}</td>
+		<td><a href="{{ img.user_url }}" target="_blank">{{ img.user_name }}</a></td>
+		<td><a href="{{ img.img_url }}" target="_blank">출처</a></td>
+		<td>{{ img.is_right }}</td>
+	</tr>
+	{% endfor %}
+</table>
