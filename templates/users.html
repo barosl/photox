@@ -1,0 +1,17 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}" type="text/css" />
+<h2>사용자 목록</h2>
+<table>
+	<tr>
+		<th>그림</th>
+		<th>이름</th>
+		<th>점수</th>
+	</tr>
+{% for user in users %}
+	<tr>
+		<td><img src="{{ user.user_img }}" alt="" /></td>
+		<td>{{ user.user_name }}</td>
+		<td>{{ user.sum_of_scores }}</td>
+	</tr>
+{% endfor %}
+</table>
