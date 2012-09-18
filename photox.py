@@ -43,7 +43,7 @@ def db_query(query, args=(), one=False):
 
 @app.route('/')
 def index():
-	add_app_url = 'https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s' % (cfg['app_id'], cfg['app_url']+'done/', 'user_photos,read_stream,email')
+	add_app_url = 'https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s' % (cfg['app_id'], cfg['app_url']+'done/', 'user_photos,read_stream')
 	return render_template('index.html', add_app_url=add_app_url)
 
 @app.route('/done/')
