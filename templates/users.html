@@ -3,12 +3,14 @@
 <h2>사용자 목록</h2>
 <table>
 	<tr>
+		<th>순위</th>
 		<th>그림</th>
 		<th>이름</th>
 		<th>점수</th>
 	</tr>
 {% for user in users %}
 	<tr>
+		<td>{{ loop.index }}</td>
 		<td><img src="{{ user.user_img }}" alt="" /></td>
 		<td>{{ user.user_name }}</td>
 		<td>{{ user.sum_of_scores }}</td>
