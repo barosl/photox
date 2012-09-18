@@ -1,5 +1,11 @@
 <!doctype html>
 <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}" type="text/css" />
+<script type="text/javascript">
+var ajax = new XMLHttpRequest();
+ajax.onreadystatechange = function() {
+	if (ajax.readyState != 4 || ajax.status != 200) return;
+}
+</script>
 <h2>그림 관리</h2>
 <table>
 	<tr>
@@ -17,7 +23,7 @@
 		<td>{{ img.ctime }}</td>
 		<td><a href="{{ img.user_url }}" target="_blank">{{ img.user_name }}</a></td>
 		<td><a href="{{ img.img_url }}" target="_blank">출처</a></td>
-		<td>{{ img.is_right }}</td>
+		<td><input type="checkbox" value="확인" {{ 'checked="checked"' if img.confirmed }} onclick="ajax.open('GET', '{{ url_for('imgs') }}{{ img.img_id }}/'+Number(this.checked))+'/'; ajax.send();" /></td>
 	</tr>
 	{% endfor %}
 </table>

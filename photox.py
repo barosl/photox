@@ -92,7 +92,7 @@ def cb():
 						break
 
 				if tag_id != -1:
-					db_query('INSERT INTO imgs(id, img, thumb, text, ctime, url, user, tag, is_right) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+					db_query('INSERT INTO imgs(id, img, thumb, text, ctime, url, user, tag, confirmed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
 						(row[u'id'], row[u'source'], row[u'picture'], row[u'name'], row[u'created_time'], row[u'link'], row[u'from'][u'id'], tag_id, False))
 					g.db.commit()
 
@@ -105,14 +105,38 @@ def cb():
 def admin():
 	return render_template('admin.html')
 
-@app.route('/tags/')
-def tags():
+@app.route('/admin/tags/', methods=['GET', 'POST'])
+@app.route('/admin/tags/<int:tag_id>/del/', methods=['GET', 'POST'])
+def tags(tag_id=None):
+	if request.form.get('mode') == 'add':
+		name = request.form.get('name')
+		score = request.form.get('score')
+		if not name or not score: return 'Invalid input'
+
+		db_query('INSERT INTO tags(name, score) VALUES(?, ?)', (name, score))
+		g.db.commit()
+
+		return redirect(url_for('tags'))
+
+	elif tag_id:
+		db_query('DELETE FROM tags WHERE id=?', (tag_id,))
+		g.db.commit()
+
+		return redirect(url_for('tags'))
+
 	tags = db_query('SELECT * FROM tags')
 	return render_template('tags.html', tags=tags)
 
-@app.route('/imgs/')
-def imgs():
-	imgs = db_query('SELECT *, users.name AS user_name, tags.name AS tag_name, users.url AS user_url, imgs.url AS img_url FROM imgs JOIN users ON imgs.user = users.id JOIN tags ON imgs.tag = tags.id')
+@app.route('/admin/imgs/')
+@app.route('/admin/imgs/<int:img_id>/<int:confirmed>/')
+def imgs(img_id=None, confirmed=None):
+	if confirmed is not None:
+		print img_id
+		db_query('UPDATE imgs SET confirmed=? WHERE id=?', (confirmed, img_id))
+		g.db.commit()
+		return '!!'
+
+	imgs = db_query('SELECT *, users.name AS user_name, tags.name AS tag_name, users.url AS user_url, imgs.url AS img_url, imgs.id AS img_id FROM imgs JOIN users ON imgs.user = users.id JOIN tags ON imgs.tag = tags.id')
 	return render_template('imgs.html', imgs=imgs)
 
 if __name__ == '__main__':

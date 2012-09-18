@@ -1,15 +1,27 @@
 <!doctype html>
 <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}" type="text/css" />
 <h2>태그 관리</h2>
+
+<form method="post" action="{{ url_for('tags') }}">
+	<input type="hidden" name="mode" value="add" />
+	태그: <input type="text" name="name" />
+	점수: <input type="text" name="score" />
+	<input type="submit" value="추가" />
+</form>
+
+<hr />
+
 <table>
 	<tr>
 		<th>태그</th>
 		<th>점수</th>
+		<th>도구</th>
 	</tr>
 	{% for tag in tags %}
 	<tr>
 		<td>{{ tag.name }}</td>
 		<td>{{ tag.score }}</td>
+		<td><a href="{{ url_for('tags') }}{{ tag.id }}/del/">삭제</a></td>
 	</tr>
 	{% endfor %}
 </table>
