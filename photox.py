@@ -129,13 +129,21 @@ def tags(tag_id=None):
 
 @app.route('/admin/imgs/')
 @app.route('/admin/imgs/<int:img_id>/<int:confirmed>/')
-def imgs(img_id=None, confirmed=None):
+@app.route('/admin/imgs/<tag>/')
+def imgs(img_id=None, confirmed=None, tag=None):
 	if confirmed is not None:
 		db_query('UPDATE imgs SET confirmed=? WHERE id=?', (confirmed, img_id))
 		g.db.commit()
 		return '!!'
 
-	imgs = db_query('SELECT *, users.name AS user_name, tags.name AS tag_name, users.url AS user_url, imgs.url AS img_url, imgs.id AS img_id FROM imgs JOIN users ON imgs.user = users.id JOIN tags ON imgs.tag = tags.id ORDER BY added DESC')
+	pred = ''
+	args = ()
+
+	if tag:
+		pred = 'WHERE tag=(SELECT id FROM tags WHERE name=? LIMIT 1)'
+		args = (tag,)
+
+	imgs = db_query('SELECT *, users.name AS user_name, tags.name AS tag_name, users.url AS user_url, imgs.url AS img_url, imgs.id AS img_id FROM imgs JOIN users ON imgs.user = users.id JOIN tags ON imgs.tag = tags.id %s ORDER BY added DESC' % pred, args)
 	return render_template('imgs.html', imgs=imgs)
 
 @app.route('/admin/users/')

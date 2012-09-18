@@ -19,7 +19,7 @@ ajax.onreadystatechange = function() {
 	{% for img in imgs %}
 	<tr>
 		<td><a href="{{ img.img }}" target="_blank"><img src="{{ img.thumb }}" alt="" /></a></td>
-		<td>{{ img.tag_name }}</td>
+		<td><a href="{{ url_for('imgs', tag=img.tag_name) }}">{{ img.tag_name }}</a></td>
 		<td>{{ img.ctime }}</td>
 		<td><a href="{{ img.user_url }}" target="_blank">{{ img.user_name }}</a></td>
 		<td><a href="{{ img.img_url }}" target="_blank">출처</a></td>
