@@ -140,7 +140,7 @@ def imgs(img_id=None, confirmed=None):
 
 @app.route('/admin/users/')
 def users():
-	users = db_query('SELECT \'https://graph.facebook.com/\' || users.id || \'/picture\' AS user_img, users.name AS user_name, SUM(score) AS sum_of_scores from imgs JOIN tags ON imgs.tag = tags.id JOIN users ON imgs.user = users.id WHERE user=(SELECT id FROM users) AND confirmed = 1 GROUP BY user ORDER BY sum_of_scores DESC')
+	users = db_query('SELECT \'https://graph.facebook.com/\' || users.id || \'/picture\' AS user_img, users.name AS user_name, SUM(score) AS sum_of_scores FROM imgs JOIN tags ON imgs.tag = tags.id JOIN users ON imgs.user = users.id WHERE confirmed = 1 GROUP BY user ORDER BY sum_of_scores DESC')
 	return render_template('users.html', users=users)
 
 if __name__ == '__main__':
